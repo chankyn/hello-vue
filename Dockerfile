@@ -1,3 +1,8 @@
-FROM nginx:alpine
+FROM node:lts-buster as nodebuild
+WORKDIR /build/
+COPY . /build/
+RUN npm install
+RUN npm run build
 
-COPY dist/ /usr/share/nginx/html/
+FROM nginx:alpine
+COPY --from=nodebuild /build/dist/ /usr/share/nginx/html/
